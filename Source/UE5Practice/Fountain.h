@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "UE5Practice.h"
@@ -18,10 +16,13 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(EEndPlayReason::Type) override;
+	virtual void PostInitializeComponents() override;
+
+	virtual void Tick(float DeltaTime) override;
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent *Body;
@@ -37,4 +38,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "ID")
 	int32 ID;
+
+	int32 count;
+
 };

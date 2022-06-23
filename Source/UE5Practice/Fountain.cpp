@@ -46,17 +46,33 @@ void AFountain::BeginPlay()
 {
 	Super::BeginPlay();
 
+	count = 0;
+
 	ABLOG_S(Warning);
 	ABLOG(Warning, TEXT("Actor Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
 
-	UE_LOG(LogTemp, Log, TEXT("Test log"));
-	UE_LOG(UE5Practice, Warning, TEXT("Actor Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
+	UE_LOG(UE5Practice, Warning, TEXT("BeginPlay()"));
+
 }
 
+void AFountain::EndPlay(EEndPlayReason::Type eendPlayReason) {
+	Super::EndPlay(eendPlayReason);
+
+	UE_LOG(UE5Practice, Warning, TEXT("EndPlay()"));
+}
+
+void AFountain::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+
+	UE_LOG(UE5Practice, Warning, TEXT("PostInitializeComponents()"));
+}
 // Called every frame
 void AFountain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	UE_LOG(UE5Practice, Warning, TEXT("%lf"), ftickfunction.TickInterval);
 
+	
 }
 

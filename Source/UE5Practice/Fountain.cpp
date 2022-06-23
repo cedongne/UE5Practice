@@ -71,7 +71,7 @@ void AFountain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	UE_LOG(UE5Practice, Warning, TEXT("%lf"), ftickfunction.TickInterval);
+	UE_LOG(UE5Practice, Warning, TEXT("%d"), count++);
 
 	
 }

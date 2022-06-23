@@ -8,10 +8,15 @@ UCLASS()
 class UE5PRACTICE_API AFountain : public AActor
 {
 	GENERATED_BODY()
-	
+
+private:
+	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	float RotateSpeed;
+
 public:	
 	// Sets default values for this actor's properties
 	AFountain();
+
 
 protected:
 	// Called when the game starts or when spawned

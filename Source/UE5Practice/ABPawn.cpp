@@ -30,6 +30,7 @@ AABPawn::AABPawn()
 	if (SK_CARDBOARD.Succeeded()) {
 		Mesh->SetSkeletalMesh(SK_CARDBOARD.Object);
 	}
+
 }
 
 // Called when the game starts or when spawned
@@ -49,10 +50,11 @@ void AABPawn::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AABPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	ABLOG_S(Warning);
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AABPawn::UpDown);
-	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &AABPawn::LeftRight);
+	PlayerInputComponent->BindAxis(TEXT("Move Forward / Backward"), this, &AABPawn::UpDown);
+	PlayerInputComponent->BindAxis(TEXT("Move Right / Left"), this, &AABPawn::LeftRight);
 
 }
 

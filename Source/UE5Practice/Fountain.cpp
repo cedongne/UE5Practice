@@ -8,6 +8,7 @@ AFountain::AFountain()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Asset link
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BODY"));
 	Water = CreateAbstractDefaultSubobject<UStaticMeshComponent>(TEXT("WATER"));
 	Light = CreateDefaultSubobject<UPointLightComponent>(TEXT("POINTLIGHT"));
@@ -39,6 +40,9 @@ AFountain::AFountain()
 	if (PS_SPLASH.Succeeded()) {
 		Splash->SetTemplate(PS_SPLASH.Object);
 	}
+
+	// Field init
+	RotateSpeed = 30.0f;
 }
 
 // Called when the game starts or when spawned
@@ -52,7 +56,6 @@ void AFountain::BeginPlay()
 	ABLOG(Warning, TEXT("Actor Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
 
 	UE_LOG(UE5Practice, Warning, TEXT("BeginPlay()"));
-
 }
 
 void AFountain::EndPlay(EEndPlayReason::Type eendPlayReason) {
@@ -70,9 +73,7 @@ void AFountain::PostInitializeComponents() {
 void AFountain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	UE_LOG(UE5Practice, Warning, TEXT("%d"), count++);
 
-	
+	AddActorLocalRotation(FRotator(0.0f, RotateSpeed * DeltaTime, 0.0f));
 }
 

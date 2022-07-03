@@ -31,13 +31,21 @@ AABPawn::AABPawn()
 		Mesh->SetSkeletalMesh(SK_CARDBOARD.Object);
 	}
 
+	Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	static ConstructorHelpers::FClassFinder<UAnimInstance> BP_AN(TEXT("/Game/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
+	if (BP_AN.Succeeded()) {
+		Mesh->SetAnimInstanceClass(BP_AN.Class);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("AnimationClass : %s"), *BP_AN.GetReferencerName());
+	}
 }
 
 // Called when the game starts or when spawned
 void AABPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame

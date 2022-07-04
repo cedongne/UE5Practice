@@ -63,7 +63,8 @@ void AABPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis(TEXT("Move Forward / Backward"), this, &AABPawn::UpDown);
 	PlayerInputComponent->BindAxis(TEXT("Move Right / Left"), this, &AABPawn::LeftRight);
-
+	PlayerInputComponent->BindAxis(TEXT("Turn Right / Left Mouse"), this, &AABPawn::Turn);
+	PlayerInputComponent->BindAxis(TEXT("Look Up / Down Mouse"), this, &AABPawn::LookUp);
 }
 
 void AABPawn::PostInitializeComponents() {
@@ -82,4 +83,13 @@ void AABPawn::UpDown(float NewAxisValue) {
 
 void AABPawn::LeftRight(float NewAxisValue) {
 	AddMovementInput(GetActorRightVector(), NewAxisValue);
+}
+
+void AABPawn::Turn(float NewAxisValue) {
+	ABLOG(Warning, TEXT("TURN %lf"), NewAxisValue);
+	AddActorLocalRotation(FRotator(0.0f, NewAxisValue, 0.0f));
+}
+
+void AABPawn::LookUp(float NewAxisValue) {
+	AddControllerPitchInput(NewAxisValue);
 }

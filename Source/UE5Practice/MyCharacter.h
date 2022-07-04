@@ -3,18 +3,17 @@
 #pragma once
 
 #include "UE5Practice.h"
-#include "GameFramework/Pawn.h"
-#include "GameFramework/FloatingPawnMovement.h"
-#include "ABPawn.generated.h"
+#include "GameFramework/Character.h"
+#include "MyCharacter.generated.h"
 
 UCLASS()
-class UE5PRACTICE_API AABPawn : public APawn
+class UE5PRACTICE_API AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	AABPawn();
+	// Sets default values for this character's properties
+	AMyCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,27 +26,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void PostInitializeComponents() override;
-	virtual void PossessedBy(AController* NewController) override;
-
-	UPROPERTY(VisibleAnywhere, Category = Collision)
-	UCapsuleComponent* Capsule;
-
-	UPROPERTY(VisibleAnywhere, Category = Visual)
-	USkeletalMeshComponent* Mesh;
-
-	UPROPERTY(VisibleAnywhere, Category = Movement)
-	UFloatingPawnMovement* Movement;
-
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UCameraComponent* Camera;
-	
+
 private:
 	void UpDown(float NewAxisValue);
 	void LeftRight(float NewAxisValue);
 	void LookUp(float NewAxisValue);
 	void Turn(float NewAxisValue);
+
 };

@@ -3,6 +3,7 @@
 
 #include "ABGameMode.h"
 #include "ABPawn.h"
+#include "MyCharacter.h"
 #include "ABPlayerController.h"
 
 AABGameMode::AABGameMode() {

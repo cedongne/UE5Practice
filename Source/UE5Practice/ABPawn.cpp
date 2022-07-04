@@ -39,6 +39,8 @@ AABPawn::AABPawn()
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("AnimationClass : %s"), *BP_AN.GetReferencerName());
 	}
+
+	SetControlMode(0);
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +48,18 @@ void AABPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+void AABPawn::SetControlMode(int32 ControlMode) {
+	if (ControlMode == 0) {
+		SpringArm->TargetArmLength = 450.0f;	
+		SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+		SpringArm->bUsePawnControlRotation = true;
+		SpringArm->bInheritPitch = true;
+		SpringArm->bInheritRoll = true;
+		SpringArm->bInheritYaw = true;
+		SpringArm->bDoCollisionTest = true;
+	}
 }
 
 // Called every frame
@@ -87,7 +101,8 @@ void AABPawn::LeftRight(float NewAxisValue) {
 
 void AABPawn::Turn(float NewAxisValue) {
 	ABLOG(Warning, TEXT("TURN %lf"), NewAxisValue);
-	AddActorLocalRotation(FRotator(0.0f, NewAxisValue, 0.0f));
+//	AddActorLocalRotation(FRotator(0.0f, NewAxisValue, 0.0f));
+	AddControllerYawInput(NewAxisValue);
 }
 
 void AABPawn::LookUp(float NewAxisValue) {

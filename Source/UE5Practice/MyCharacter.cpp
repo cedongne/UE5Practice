@@ -65,10 +65,8 @@ void AMyCharacter::LeftRight(float NewAxisValue) {
 	AddMovementInput(GetActorRightVector(), NewAxisValue);
 }
 
-
-
 void AMyCharacter::Turn(float NewAxisValue) {
-	GetMesh()->SetWorldRotation(GetActorRotation() + FRotator(0.0f, NewAxisValue, 0.0f));
+	AddControllerYawInput(NewAxisValue);
 }
 
 void AMyCharacter::LookUp(float NewAxisValue) {

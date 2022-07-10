@@ -30,6 +30,7 @@ AMyCharacter::AMyCharacter()
 		GetMesh()->SetAnimInstanceClass(BP_ANIM_RUN.Class);
 	}
 
+	SetControlMode(EControlMode::QUARTERVIEW);
 }
 
 // Called when the game starts or when spawned
@@ -39,11 +40,52 @@ void AMyCharacter::BeginPlay()
 	
 }
 
+void AMyCharacter::SetControlMode(EControlMode NewControlMode) {
+	CurrentControlMode = NewControlMode;
+	switch (CurrentControlMode)
+	{
+	case EControlMode::SHOULDERVIEW:
+		SpringArm->TargetArmLength = 450.0f;
+		SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+		SpringArm->bUsePawnControlRotation = true;
+		SpringArm->bInheritPitch = true;
+		SpringArm->bInheritRoll = true;
+		SpringArm->bInheritYaw = true;
+		SpringArm->bDoCollisionTest = true;
+		bUseControllerRotationYaw = false;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+		break;
+
+	case EControlMode::QUARTERVIEW:
+		SpringArm->TargetArmLength = 800.0f;
+		SpringArm->SetRelativeRotation(FRotator(-45.0f, 0.0f, 0.0f));
+		SpringArm->bUsePawnControlRotation = false;
+		SpringArm->bInheritPitch = false;
+		SpringArm->bInheritRoll = false;
+		SpringArm->bInheritYaw = false;
+		SpringArm->bDoCollisionTest = false;
+		bUseControllerRotationYaw = false;
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+		GetCharacterMovement()->bUseControllerDesiredRotation = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+		break;
+	}
+}
+
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	switch(CurrentControlMode) {
+	case EControlMode::QUARTERVIEW:
+		if (DirectionToMove.SizeSquared() > 0.0f) {
+			GetController()->SetControlRotation(FRotationMatrix::MakeFromX(DirectionToMove).Rotator());
+			AddMovementInput(DirectionToMove);
+		}
+		break;
+	}
 }
 
 // Called to bind functionality to input
@@ -58,17 +100,42 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 
 void AMyCharacter::UpDown(float NewAxisValue) {
-	AddMovementInput(GetActorForwardVector(), NewAxisValue);
+	switch (CurrentControlMode) {
+	case EControlMode::SHOULDERVIEW:
+		AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X), NewAxisValue);
+		break;
+
+	case EControlMode::QUARTERVIEW:
+		DirectionToMove.X = NewAxisValue;
+		break;
+	}
 }
 
 void AMyCharacter::LeftRight(float NewAxisValue) {
-	AddMovementInput(GetActorRightVector(), NewAxisValue);
+	switch (CurrentControlMode) {
+	case EControlMode::SHOULDERVIEW:
+		AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y), NewAxisValue);
+		break;
+
+	case EControlMode::QUARTERVIEW:
+		DirectionToMove.Y = NewAxisValue;
+		break;
+	}
 }
 
 void AMyCharacter::Turn(float NewAxisValue) {
-	AddControllerYawInput(NewAxisValue);
+	switch (CurrentControlMode) {
+	case EControlMode::SHOULDERVIEW:
+		AddControllerYawInput(NewAxisValue);
+		break;
+	}
 }
 
 void AMyCharacter::LookUp(float NewAxisValue) {
-	AddControllerPitchInput(NewAxisValue);
+	switch (CurrentControlMode) {
+	case EControlMode::SHOULDERVIEW:
+		AddControllerPitchInput(NewAxisValue);
+		break;
+	}
 }
+ 

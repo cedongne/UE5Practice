@@ -7,7 +7,7 @@
 #include "ABPlayerController.h"
 
 AABGameMode::AABGameMode() {
-	DefaultPawnClass = AABPawn::StaticClass();
+	DefaultPawnClass = AMyCharacter::StaticClass();
 	PlayerControllerClass = AABPlayerController::StaticClass();
 }
 

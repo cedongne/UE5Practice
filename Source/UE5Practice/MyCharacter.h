@@ -19,6 +19,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	enum class EControlMode {
+		SHOULDERVIEW,
+		QUARTERVIEW
+	};
+
+	void SetControlMode(EControlMode ControlMode);
+	EControlMode CurrentControlMode = EControlMode::SHOULDERVIEW;
+	FVector DirectionToMove = FVector::ZeroVector;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

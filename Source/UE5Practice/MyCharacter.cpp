@@ -33,12 +33,6 @@ AMyCharacter::AMyCharacter()
 	SetControlMode(EControlMode::QUARTERVIEW);
 }
 
-// Called when the game starts or when spawned
-void AMyCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
 
 void AMyCharacter::SetControlMode(EControlMode NewControlMode) {
 	CurrentControlMode = NewControlMode;

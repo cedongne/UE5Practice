@@ -30,7 +30,10 @@ AMyCharacter::AMyCharacter()
 		GetMesh()->SetAnimInstanceClass(BP_ANIM_RUN.Class);
 	}
 
-	SetControlMode(EControlMode::QUARTERVIEW);
+	SetControlMode(EControlMode::SHOULDERVIEW);
+
+	ArmLengthSpeed = 3.0f;
+	ArmRotationSpeed = 10.0f;
 }
 
 
@@ -39,8 +42,9 @@ void AMyCharacter::SetControlMode(EControlMode NewControlMode) {
 	switch (CurrentControlMode)
 	{
 	case EControlMode::SHOULDERVIEW:
-		SpringArm->TargetArmLength = 450.0f;
-		SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+//		SpringArm->TargetArmLength = 450.0f;
+//		SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+		ArmLengthTo = 450.0f;
 		SpringArm->bUsePawnControlRotation = true;
 		SpringArm->bInheritPitch = true;
 		SpringArm->bInheritRoll = true;
@@ -52,8 +56,10 @@ void AMyCharacter::SetControlMode(EControlMode NewControlMode) {
 		break;
 
 	case EControlMode::QUARTERVIEW:
-		SpringArm->TargetArmLength = 800.0f;
-		SpringArm->SetRelativeRotation(FRotator(-45.0f, 0.0f, 0.0f));
+//		SpringArm->TargetArmLength = 800.0f;
+//		SpringArm->SetRelativeRotation(FRotator(-45.0f, 0.0f, 0.0f));
+		ArmLengthTo = 800.0f;
+		ArmRotationTo = FRotator(-45.0f, 0.0f, 0.0f);
 		SpringArm->bUsePawnControlRotation = false;
 		SpringArm->bInheritPitch = false;
 		SpringArm->bInheritRoll = false;
@@ -72,8 +78,11 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SpringArm->TargetArmLength = FMath::FInterpTo(SpringArm->TargetArmLength, ArmLengthTo, DeltaTime, ArmLengthSpeed);
+
 	switch(CurrentControlMode) {
 	case EControlMode::QUARTERVIEW:
+		SpringArm->SetRelativeRotation(FMath::RInterpTo(SpringArm->GetRelativeRotation(), ArmRotationTo, DeltaTime, ArmRotationSpeed));
 		if (DirectionToMove.SizeSquared() > 0.0f) {
 			GetController()->SetControlRotation(FRotationMatrix::MakeFromX(DirectionToMove).Rotator());
 			AddMovementInput(DirectionToMove);
@@ -91,6 +100,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Move Right / Left"), this, &AMyCharacter::LeftRight);
 	PlayerInputComponent->BindAxis(TEXT("Turn Right / Left Mouse"), this, &AMyCharacter::Turn);
 	PlayerInputComponent->BindAxis(TEXT("Look Up / Down Mouse"), this, &AMyCharacter::LookUp);
+	PlayerInputComponent->BindAction(TEXT("View Change"), EInputEvent::IE_Pressed, this, &AMyCharacter::ViewChange);
 }
 
 void AMyCharacter::UpDown(float NewAxisValue) {
@@ -129,6 +139,19 @@ void AMyCharacter::LookUp(float NewAxisValue) {
 	switch (CurrentControlMode) {
 	case EControlMode::SHOULDERVIEW:
 		AddControllerPitchInput(NewAxisValue);
+		break;
+	}
+}
+
+void AMyCharacter::ViewChange() {
+	switch (CurrentControlMode) {
+	case EControlMode::SHOULDERVIEW:
+		GetController()->SetControlRotation(GetActorRotation());
+		SetControlMode(EControlMode::QUARTERVIEW);
+		break;
+	case EControlMode::QUARTERVIEW:
+		GetController()->SetControlRotation(SpringArm->GetRelativeRotation());
+		SetControlMode(EControlMode::SHOULDERVIEW);
 		break;
 	}
 }

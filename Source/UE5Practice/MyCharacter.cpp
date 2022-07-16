@@ -25,7 +25,7 @@ AMyCharacter::AMyCharacter()
 	}
 
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	static ConstructorHelpers::FClassFinder<UAnimInstance> BP_ANIM_RUN(TEXT("/Game/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> BP_ANIM_RUN(TEXT("AnimBlueprint'/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C'"));
 	if (BP_ANIM_RUN.Succeeded()) {
 		GetMesh()->SetAnimInstanceClass(BP_ANIM_RUN.Class);
 	}

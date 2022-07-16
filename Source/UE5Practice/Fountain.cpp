@@ -10,7 +10,7 @@ AFountain::AFountain()
 
 	// Asset link
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BODY"));
-	Water = CreateAbstractDefaultSubobject<UStaticMeshComponent>(TEXT("WATER"));
+	Water = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WATER"));
 	Light = CreateDefaultSubobject<UPointLightComponent>(TEXT("POINTLIGHT"));
 	Splash = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SPLASH"));
 

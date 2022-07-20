@@ -34,6 +34,8 @@ AMyCharacter::AMyCharacter()
 
 	ArmLengthSpeed = 3.0f;
 	ArmRotationSpeed = 10.0f;
+
+	GetCharacterMovement()->JumpZVelocity = 800.0f;
 }
 
 
@@ -100,7 +102,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Move Right / Left"), this, &AMyCharacter::LeftRight);
 	PlayerInputComponent->BindAxis(TEXT("Turn Right / Left Mouse"), this, &AMyCharacter::Turn);
 	PlayerInputComponent->BindAxis(TEXT("Look Up / Down Mouse"), this, &AMyCharacter::LookUp);
+
 	PlayerInputComponent->BindAction(TEXT("View Change"), EInputEvent::IE_Pressed, this, &AMyCharacter::ViewChange);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 }
 
 void AMyCharacter::UpDown(float NewAxisValue) {

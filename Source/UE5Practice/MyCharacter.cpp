@@ -2,6 +2,7 @@
 
 
 #include "MyCharacter.h"
+#include "MyAnimInstance.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -105,6 +106,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction(TEXT("View Change"), EInputEvent::IE_Pressed, this, &AMyCharacter::ViewChange);
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AMyCharacter::Attack);
 }
 
 void AMyCharacter::UpDown(float NewAxisValue) {
@@ -159,4 +161,10 @@ void AMyCharacter::ViewChange() {
 		break;
 	}
 }
- 
+
+void AMyCharacter::Attack() {
+	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayAttackMontage();
+}

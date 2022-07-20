@@ -6,6 +6,10 @@
 UMyAnimInstance::UMyAnimInstance() {
 	CurrentPawnSpeed = 0.0f;
 	IsInAir = false;
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("/Game/Book/Animations/WarriorAttackMontage.WarriorAttackMontage"));
+	if (ATTACK_MONTAGE.Succeeded()) {
+		AttackMontage = ATTACK_MONTAGE.Object;
+	}
 }
 
 void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds) {
@@ -19,5 +23,11 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds) {
 		if (Character) {
 			IsInAir = Character->GetMovementComponent()->IsFalling();
 		}
+	}
+}
+
+void UMyAnimInstance::PlayAttackMontage() {
+	if (!Montage_IsPlaying(AttackMontage)) {
+		Montage_Play(AttackMontage, 1.0f);
 	}
 }

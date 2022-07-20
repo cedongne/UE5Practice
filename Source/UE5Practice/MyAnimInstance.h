@@ -16,12 +16,16 @@ class UE5PRACTICE_API UMyAnimInstance : public UAnimInstance
 	
 public:
 	UMyAnimInstance();
-
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	void PlayAttackMontage();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float CurrentPawnSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowprivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	bool IsInAir;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* AttackMontage;
 };

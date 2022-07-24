@@ -37,6 +37,15 @@ AMyCharacter::AMyCharacter()
 	ArmRotationSpeed = 10.0f;
 
 	GetCharacterMovement()->JumpZVelocity = 800.0f;
+
+	IsAttacking = false;
+}
+
+void AMyCharacter::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	UE5CHECK(nullptr != AnimInstance);
+	AnimInstance->OnMontageEnded.__Internal_AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
 }
 
 
@@ -163,8 +172,17 @@ void AMyCharacter::ViewChange() {
 }
 
 void AMyCharacter::Attack() {
+	if (IsAttacking) return;
+
 	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
 
 	AnimInstance->PlayAttackMontage();
+
+	IsAttacking = true;
+}
+
+void AMyCharacter::OnAttackMontageEnded(UAnimInstance* Montage, bool bInterrupted) {
+	UE5CHECK(IsAttacking);
+	IsAttacking = false;
 }

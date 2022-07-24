@@ -52,8 +52,8 @@ void AFountain::BeginPlay()
 
 	count = 0;
 
-	ABLOG_S(Warning);
-	ABLOG(Warning, TEXT("Actor Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
+	UE5LOG_S(Warning);
+	UE5LOG(Warning, TEXT("Actor Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
 
 	UE_LOG(UE5Practice, Warning, TEXT("BeginPlay()"));
 }

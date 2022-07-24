@@ -11,7 +11,7 @@ AABGameMode::AABGameMode() {
 }
 
 void AABGameMode::PostLogin(APlayerController* NewPlayer) {
-	ABLOG(Warning, TEXT("PostLogin Begin"));
+	UE5LOG(Warning, TEXT("PostLogin Begin"));
 	Super::PostLogin(NewPlayer);
-	ABLOG(Warning, TEXT("PostLogin End"));
+	UE5LOG(Warning, TEXT("PostLogin End"));
 }

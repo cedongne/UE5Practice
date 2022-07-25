@@ -55,7 +55,7 @@ private:
 	void Attack();
 
 	UFUNCTION()
-	void OnAttackMontageEnded(UAnimInstance* Montage, bool bInterrupted);
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))

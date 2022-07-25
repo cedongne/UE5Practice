@@ -45,7 +45,7 @@ void AMyCharacter::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	UE5CHECK(nullptr != AnimInstance);
-	AnimInstance->OnMontageEnded.__Internal_AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
+	AnimInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
 }
 
 
@@ -182,7 +182,7 @@ void AMyCharacter::Attack() {
 	IsAttacking = true;
 }
 
-void AMyCharacter::OnAttackMontageEnded(UAnimInstance* Montage, bool bInterrupted) {
+void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) {
 	UE5CHECK(IsAttacking);
 	IsAttacking = false;
 }

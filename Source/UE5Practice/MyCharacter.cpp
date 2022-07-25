@@ -43,9 +43,9 @@ AMyCharacter::AMyCharacter()
 
 void AMyCharacter::PostInitializeComponents() {
 	Super::PostInitializeComponents();
-	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
-	UE5CHECK(nullptr != AnimInstance);
-	AnimInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
+	MyAnim = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	UE5CHECK(nullptr != MyAnim);
+	MyAnim->OnMontageEnded.AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
 }
 
 
@@ -177,7 +177,7 @@ void AMyCharacter::Attack() {
 	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
 
-	AnimInstance->PlayAttackMontage();
+	MyAnim->PlayAttackMontage();
 
 	IsAttacking = true;
 }

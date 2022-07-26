@@ -39,13 +39,26 @@ AMyCharacter::AMyCharacter()
 	GetCharacterMovement()->JumpZVelocity = 800.0f;
 
 	IsAttacking = false;
+	MaxCombo = 4;
+	AttackEndComboState();
 }
 
 void AMyCharacter::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 	MyAnim = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	UE5CHECK(nullptr != MyAnim);
+
 	MyAnim->OnMontageEnded.AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
+
+	MyAnim->OnNextAttackCheck.AddLambda([this]() -> void {
+		UE5LOG(Warning, TEXT("OnNextAttackCheck"));
+		CanNextCombo = false;
+
+		if (IsComboInputOn) {
+			AttackStartComboState();
+			MyAnim->JumpToAttackMontageSection(CurrentCombo);
+		}
+	});
 }
 
 
@@ -172,17 +185,38 @@ void AMyCharacter::ViewChange() {
 }
 
 void AMyCharacter::Attack() {
-	if (IsAttacking) return;
-
-	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
-
-	MyAnim->PlayAttackMontage();
-
-	IsAttacking = true;
+	if (IsAttacking) {
+		UE5CHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 1, MaxCombo));
+		if (CanNextCombo) {
+			IsComboInputOn = true;
+		}
+	}
+	else {
+		UE5CHECK(CurrentCombo == 0);
+		AttackStartComboState();
+		MyAnim->PlayAttackMontage();
+		MyAnim->JumpToAttackMontageSection(CurrentCombo);
+		IsAttacking = true;
+	}
 }
 
 void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) {
 	UE5CHECK(IsAttacking);
+	UE5CHECK(CurrentCombo > 0);
 	IsAttacking = false;
+	AttackEndComboState();
+}
+
+void AMyCharacter::AttackStartComboState() {
+	CanNextCombo = true;
+	IsComboInputOn = false;
+	UE_LOG(LogTemp, Warning, TEXT("Current Combo %d"), CurrentCombo);
+	UE5CHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 0, MaxCombo - 1));
+	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
+}
+
+void AMyCharacter::AttackEndComboState() {
+	CurrentCombo = 0;
+	IsComboInputOn = false;
+	CanNextCombo = false;
 }

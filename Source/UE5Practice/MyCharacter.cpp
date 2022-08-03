@@ -41,6 +41,8 @@ AMyCharacter::AMyCharacter()
 	IsAttacking = false;
 	MaxCombo = 4;
 	AttackEndComboState();
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyCharacter"));
 }
 
 void AMyCharacter::PostInitializeComponents() {
@@ -59,6 +61,8 @@ void AMyCharacter::PostInitializeComponents() {
 			MyAnim->JumpToAttackMontageSection(CurrentCombo);
 		}
 	});
+
+	MyAnim->OnAttackHitCheck.AddUObject(this, &AMyCharacter::AttackCheck);
 }
 
 
@@ -219,4 +223,23 @@ void AMyCharacter::AttackEndComboState() {
 	CurrentCombo = 0;
 	IsComboInputOn = false;
 	CanNextCombo = false;
+}
+
+void AMyCharacter::AttackCheck() {
+	FHitResult HitResult;
+	FCollisionQueryParams Params(NAME_None, false, this);
+	bool bResult = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * 200.0f,
+		FQuat::Identity,
+		ECollisionChannel::ECC_EngineTraceChannel2,
+		FCollisionShape::MakeSphere(50.0f),
+		Params);
+
+	if (bResult) {
+		if (HitResult.GetActor()) {
+			UE5LOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.GetActor()->GetName());
+		}
+	}
 }
